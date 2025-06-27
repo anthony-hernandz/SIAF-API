@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Recuperar contraseña</title>
+    </head>
+    <body>
+        <style>
+            a {
+                text-decoration:none !important; 
+                font-weight:500; 
+                margin-top:35px; 
+                margin-left: 50px;
+                color:#919492;
+                font-size:20px;
+                padding:10px 24px;
+                display:inline-block;
+                border-radius:50px;
+                border: 1px solid #919492;
+                float: left;
+            }
+            p {
+                color: #333A45;
+                font-weight: 500;
+            }
+            img {
+                float: left;
+            }
+        </style>
+        <p>Estimado(a) {{ name }}</p>
+        <p>Se ha recibido una solicitud para restablecer la contraseña de tu cuenta. Para proceder con este proceso, asegurate de seguir las instrucciones cuidadosamente y 
+        de crear una contraseña segura que sea dificl de adivinar para mantener tu cuenta protegida.
+        <br>
+        Si no solicitó el restablecimiento de contraseña, hacer caso omiso de este correo.</p>
+        <img src="cid:logo"><a href='http://{{ url }}' style="">Recuperar contraseña</a>
+    </body>
+</html>
