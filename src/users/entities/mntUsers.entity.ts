@@ -7,7 +7,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
+  PrimaryColumn, OneToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
@@ -16,6 +16,7 @@ import { MntPermissionsUser } from 'src/auth/entities/MntPermissionsUser.entity'
 import { MntRestoreAccount } from './mntRestoreAccount.entity';
 import { MntRolUser } from './mntRolUser.entity';
 import { CtlEstablecimiento } from 'src/administracion/establecimientos/entities/establecimientos.entity';
+import { CtlPaises } from 'src/administracion/catalogs/entities/paises.entity';//se agrega ctlPaises
 
 @Entity('mnt_usuarios')
 export class MntUsers {
@@ -23,13 +24,25 @@ export class MntUsers {
   id: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  nombres: string;
+  primerNombre: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  apellidos: string;
+  segundoNombre: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  tercerNombre: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  primerApellido: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  segundoApellido: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true, unique: true })
   email: string;
+//agregado nombre de usuario
+  @Column({ type: 'varchar', length: 50, nullable: true, unique: true })
+  username: string;
 
   @Exclude()
   @Column({ type: 'text' })
@@ -79,6 +92,12 @@ export class MntUsers {
   )
   @JoinColumn({ name: 'id_establecimiento' })
   establecimiento: CtlEstablecimiento;
+
+  //Agregando el id_pais
+   @OneToOne(() => CtlPaises)
+  @JoinColumn({ name: 'id_pais' }) //  columna que está en la tabla mnt_usuarios
+  pais: CtlPaises;
+
 
   @OneToMany(() => MntPermissionsUser, (permission) => permission.user)
   permissions: MntPermissionsUser[];

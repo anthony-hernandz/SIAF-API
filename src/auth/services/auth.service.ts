@@ -29,13 +29,14 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<MntUsers> {
     const user = await this.usersService.findByEmail(email);
-    if (user && user.active) {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (isMatch) {
-        return user;
-      }
+    if (!user || !user.active) {
+      throw new UnauthorizedException('Usuario no encontrado o inactivo');
     }
-    return null;
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Contraseña incorrecta');
+    }
+    return user;
   }
 
   async login(user: MntUsers) {
@@ -55,6 +56,8 @@ export class AuthService {
     const infoUser: IAuthUser = {
       id: user.id,
       email: user.email,
+      nombres: user.primerNombre,
+      apellidos: user.primerApellido,
       tipo_usuario: {
         id: user.rol.id,
         nombre: user.rol.name,
