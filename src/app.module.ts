@@ -8,6 +8,7 @@ import { UsersModule } from '@users/users.module';
 import { ModulesModule } from '@modules/modules.module';
 import { CommonModule } from '@common/common.module';
 import { EstablecimientosModule } from './administracion/establecimientos/establecimientos.module';
+import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_activos.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { EstablecimientosModule } from './administracion/establecimientos/establ
     ModulesModule,
     CommonModule,
     EstablecimientosModule,
+    TipoActivoModule,
   ],
   controllers: [],
   providers: [],
