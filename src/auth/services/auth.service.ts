@@ -29,9 +29,11 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<MntUsers> {
     const user = await this.usersService.findByEmail(email);
+    // Devuelve error si el usuario no existe o esta inactivo
     if (!user || !user.active) {
       throw new UnauthorizedException('Usuario no encontrado o inactivo');
     }
+    // Compara contraseñas y lanza error si no son iguales
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Contraseña incorrecta');
