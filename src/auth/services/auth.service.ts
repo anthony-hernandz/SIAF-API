@@ -58,8 +58,8 @@ export class AuthService {
     const infoUser: IAuthUser = {
       id: user.id,
       email: user.email,
-      nombres: user.primerNombre,
-      apellidos: user.primerApellido,
+      nombres: [user.primerNombre, user.segundoNombre, user.tercerNombre] .filter(Boolean) .join(" "), // Une los nombres en un solo string
+      apellidos: [user.primerApellido, user.segundoApellido] .filter(Boolean) .join(" "), // Une los apellidos en un solo string
       tipo_usuario: {
         id: user.rol.id,
         nombre: user.rol.name,
