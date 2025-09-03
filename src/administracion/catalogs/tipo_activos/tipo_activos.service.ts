@@ -15,7 +15,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment-timezone';
 
-import { CreateTipoActivoDto, UpdateTipoActivoDto } from './dto/tipo_activo.dto';
+import { CreateTipoActivoDto, DelateTipoActivoDto, UpdateTipoActivoDto } from './dto/tipo_activo.dto';
 import { MntTipoActivo } from './entities/tipo_activo.entity';
 import { paginationTipoAcDTO } from './dto/tipoactivo-pagination';
 import { UsersService } from '@users/services/users.service';
@@ -57,6 +57,9 @@ export class TipoActivoService {
       nombre: true,
       registro: { primerNombre: true, primerApellido: true },
       active: true,
+      estado: true,
+      motivo_inactivar: true,
+      es_nuevo: true,
     };
 
     findOptions.where = where;
@@ -67,8 +70,10 @@ export class TipoActivoService {
       id: t.id,
       nombre: t.nombre,
       //Especificación del dato que se requiere del usuario (nombre y apellido)
-      registro: `${t.registro?.primerApellido ?? ''} ${t.registro?.primerApellido ?? ''}`.trim(),
-      active: t.active,
+      registro: `${t.registro?.primerNombre ?? ''} ${t.registro?.primerApellido ?? ''}`.trim(),
+      estado: t.estado,
+      motivo_inactivar: t.motivo_inactivar,
+      es_nuevo: t.es_nuevo,
     }));
 
     return {
@@ -97,7 +102,9 @@ export class TipoActivoService {
       nombre: tipoactivo.nombre,
       //Especificación del dato que se requiere del usuario (nombre y apellido)
       registro: `${tipoactivo.registro?.primerNombre ?? ''} ${tipoactivo.registro?.primerApellido ?? ''}`.trim(),
-      active: tipoactivo.active,
+      estado: tipoactivo.estado,
+      motivo_inactivar: tipoactivo.motivo_inactivar,
+      es_nuevo: tipoactivo.es_nuevo,
     };
    
   }
@@ -128,7 +135,9 @@ export class TipoActivoService {
       nombre: savedTipoActivo.nombre,
       //Especificación del dato que se requiere del usuario (nombre y apellido)
       registro: `${usuario.primerNombre} ${usuario.primerApellido}`.trim(),
-      active: savedTipoActivo.active,
+      estado: savedTipoActivo.estado,
+      motivo_inactivar: savedTipoActivo.motivo_inactivar,
+      es_nuevo: savedTipoActivo.es_nuevo,
     };
   }
 
@@ -163,12 +172,16 @@ export class TipoActivoService {
       nombre: updateTipoActivo.nombre,
       //Especificación del dato que se requiere del usuario (nombre y apellido)
       registro: `${tipoActivoRelation.registro?.primerNombre ?? ''} ${tipoActivoRelation.registro?.primerApellido ?? ''}`.trim(),
-      active: updateTipoActivo.active,
+      estado: updateTipoActivo.estado,
+      motivo_inactivar: updateTipoActivo.motivo_inactivar,
+      es_nuevo: updateTipoActivo.es_nuevo,
     };
   }
 
   //Eliminación del Tipo de activo
-  async delete (id: string): Promise<void> {
+  async delete (id: string, delateTipoActivoDto: DelateTipoActivoDto): Promise<void> {
+    const {justificacion} = delateTipoActivoDto;
+    //falta difinir la justificacion
     await this.findOne(id);
     await this.tipoActivoRepository.softDelete(id);
   }

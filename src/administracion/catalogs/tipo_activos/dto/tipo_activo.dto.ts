@@ -14,3 +14,13 @@ export class CreateTipoActivoDto {
 
 export class UpdateTipoActivoDto extends
 PartialType(CreateTipoActivoDto){}
+
+export class DelateTipoActivoDto{
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(6)
+    @MaxLength(250, {message: 'Máximo 250 caracteres'})
+    @Matches(/^[a-zA-Z\u00C0-\u017F\s]+$/)
+    justificacion: string;
+
+}

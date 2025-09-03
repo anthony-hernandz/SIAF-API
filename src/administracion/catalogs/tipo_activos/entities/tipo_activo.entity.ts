@@ -14,6 +14,11 @@ import { Exclude } from "class-transformer";
 import { MntUsers } from "@users/entities";
 //import { MntCaracteristicas } from "../../caracteristicas/entities/caracteristica.entity";
 
+export enum estadoAct{
+  Activo = 'activo',
+  Inactivo = 'inactivo'
+}
+
 @Entity('mnt_tipo_activo')
 export class MntTipoActivo {
 
@@ -25,6 +30,18 @@ export class MntTipoActivo {
 
     @Column({type: 'boolean', default: true, name: 'activo'})
     active: boolean;
+
+     //Estado del registro: inactivo o activo
+    @Column({type:'enum', enum: estadoAct, default:estadoAct.Inactivo})
+    estado: estadoAct;
+
+    //Justificación al inactivar un registro
+    @Column({type: 'text', nullable: true})
+    motivo_inactivar: string;
+
+    //Verificar si un registro es nuevo (creando la opción eliminar)
+    @Column({type: 'boolean', default: true})
+    es_nuevo: boolean;
 
     @Exclude()
       @CreateDateColumn({

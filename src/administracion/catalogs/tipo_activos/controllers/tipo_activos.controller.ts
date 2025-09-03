@@ -12,7 +12,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { TipoActivoService } from '../tipo_activos.service';
-import { CreateTipoActivoDto, UpdateTipoActivoDto } from '../dto/tipo_activo.dto';
+import { CreateTipoActivoDto, DelateTipoActivoDto, UpdateTipoActivoDto } from '../dto/tipo_activo.dto';
 import { paginationTipoAcDTO } from '../dto/tipoactivo-pagination';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 //import { JwtAuthGuard } from '@auth/guards/jwt.guard';
@@ -56,8 +56,8 @@ export class TipoActivoController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete a tipo de activo'})
   @Delete('/:id')
-  async delete(@Param('id') id: string) {
-    return await this.tipoActivoService.delete(id);
+  async delete(@Param('id') id: string, @Body() delateTipoActivoDto: DelateTipoActivoDto) {
+    return await this.tipoActivoService.delete(id, delateTipoActivoDto);
   }
 }
 
