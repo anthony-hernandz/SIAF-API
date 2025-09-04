@@ -9,6 +9,7 @@ import { ModulesModule } from '@modules/modules.module';
 import { CommonModule } from '@common/common.module';
 import { EstablecimientosModule } from './administracion/establecimientos/establecimientos.module';
 import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_activos.module';
+import { TipofinanciamientoModule } from './administracion/catalogs/tipofinanciamiento/tipofinanciamiento.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_ac
     CommonModule,
     EstablecimientosModule,
     TipoActivoModule,
+    TipofinanciamientoModule,
   ],
   controllers: [],
   providers: [],
