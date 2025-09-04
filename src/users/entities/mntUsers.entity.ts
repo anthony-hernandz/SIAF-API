@@ -94,7 +94,7 @@ export class MntUsers {
   establecimiento: CtlEstablecimiento;
 
   //Agregando el id_pais
-   @OneToOne(() => CtlPaises)
+   @ManyToOne(() => CtlPaises)
   @JoinColumn({ name: 'id_pais' }) //  columna que está en la tabla mnt_usuarios
   pais: CtlPaises;
 
