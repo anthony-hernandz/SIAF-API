@@ -17,6 +17,7 @@ import { MntRestoreAccount } from './mntRestoreAccount.entity';
 import { MntRolUser } from './mntRolUser.entity';
 import { CtlEstablecimiento } from 'src/administracion/establecimientos/entities/establecimientos.entity';
 import { CtlPaises } from 'src/administracion/catalogs/entities/paises.entity';//se agrega ctlPaises
+import { CtlDependencia } from 'src/database/entities/CtlDependencia.entity'
 
 @Entity('mnt_usuarios')
 export class MntUsers {
@@ -107,4 +108,9 @@ export class MntUsers {
 
   @OneToMany(() => MntRestoreAccount, (restore) => restore.user)
   restoreAccount: MntRestoreAccount[];
+  
+  @ManyToOne(() => CtlDependencia)
+  @JoinColumn({ name: 'id_dependencia' })
+  dependencia: CtlDependencia;
+
 }

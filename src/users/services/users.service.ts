@@ -111,7 +111,7 @@ export class UsersService {
 
   async create(createUserDTO: createUserDTO): Promise<MntUsers> {
     const { idRol, password, email, primerNombre, segundoNombre, 
-      tercerNombre, primerApellido,segundoApellido , fecha_nacimiento, n_documento, establecimiento,username, pais} = createUserDTO;
+      tercerNombre, primerApellido,segundoApellido , fecha_nacimiento, n_documento, establecimiento,username, pais, dependencia} = createUserDTO;
 
     await this.rolService.findOne(idRol);
 
@@ -135,6 +135,7 @@ export class UsersService {
       fecha_nacimiento: fecha_nacimiento ? new Date(fecha_nacimiento) : null,
       n_documento,
       establecimiento: establecimiento ? { id: establecimiento } : null, 
+      dependencia: dependencia ? { id: dependencia } : null, 
       username,
       pais: pais ? { id: pais } : null,
       createAt: moment().tz('America/El_Salvador').format(),
@@ -147,7 +148,7 @@ export class UsersService {
 
   async update(id: string, updateUserDTO: updateUserDTO): Promise<MntUsers> {
     const { idRol, email, primerNombre, segundoNombre,tercerNombre, primerApellido, segundoApellido,
-      fecha_nacimiento,n_documento, establecimiento, pais} = updateUserDTO;
+      fecha_nacimiento,n_documento, establecimiento, pais, dependencia} = updateUserDTO;
     const oldUser = await this.findOne(id);
 
     if (email) {
@@ -169,6 +170,8 @@ export class UsersService {
       fecha_nacimiento: fecha_nacimiento ? new Date(fecha_nacimiento) : null,
       n_documento,
       establecimiento: establecimiento ? { id: establecimiento } : null, 
+      dependencia: dependencia ? { id: dependencia } : null, 
+
       pais: pais ? { id: pais } : null,
       updateAt: moment().tz('America/El_Salvador').format(),
     });

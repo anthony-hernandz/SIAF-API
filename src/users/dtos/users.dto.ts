@@ -56,6 +56,9 @@ public readonly username: string;
 @IsNumber()
 public readonly establecimiento: number;
 
+@IsNotEmpty()
+@IsNumber()
+public readonly dependencia: number;
 
 }
 
