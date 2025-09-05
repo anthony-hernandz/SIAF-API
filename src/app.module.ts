@@ -10,6 +10,8 @@ import { CommonModule } from '@common/common.module';
 import { EstablecimientosModule } from './administracion/establecimientos/establecimientos.module';
 import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_activos.module';
 import { TipofinanciamientoModule } from './administracion/catalogs/tipofinanciamiento/tipofinanciamiento.module';
+import { DependenciaModule } from './dependencia/dependencia.module';
+
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { TipofinanciamientoModule } from './administracion/catalogs/tipofinancia
     EstablecimientosModule,
     TipoActivoModule,
     TipofinanciamientoModule,
+    DependenciaModule,
+
   ],
   controllers: [],
   providers: [],
