@@ -11,6 +11,7 @@ import { EstablecimientosModule } from './administracion/establecimientos/establ
 import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_activos.module';
 import { TipofinanciamientoModule } from './administracion/catalogs/tipofinanciamiento/tipofinanciamiento.module';
 import { DependenciaModule } from './dependencia/dependencia.module';
+import { GrupoModule } from './administracion/catalogs/grupo/grupo.module';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { DependenciaModule } from './dependencia/dependencia.module';
     TipoActivoModule,
     TipofinanciamientoModule,
     DependenciaModule,
+    GrupoModule,
 
   ],
   controllers: [],
