@@ -15,8 +15,8 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment-timezone';
 
-import { CreateTipoActivoDto, DelateTipoActivoDto, UpdateTipoActivoDto } from './dto/tipo_activo.dto';
-import { MntTipoActivo } from './entities/tipo_activo.entity';
+import { ActivarTipoActivoDto, CreateTipoActivoDto, DesactivarTipoActivoDto, UpdateTipoActivoDto } from './dto/tipo_activo.dto';
+import { estadoAct, MntTipoActivo } from './entities/tipo_activo.entity';
 import { paginationTipoAcDTO } from './dto/tipoactivo-pagination';
 import { UsersService } from '@users/services/users.service';
 import { ITipoActivo, ITipoActivoPaginatedResponse } from './tipo-activo.interface';
@@ -29,6 +29,20 @@ export class TipoActivoService {
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
   ) {}
+
+  //Evitar repeticion
+  private transformInterface(tipoActivo: MntTipoActivo): ITipoActivo{
+    return{
+      id: tipoActivo.id,
+      nombre: tipoActivo.nombre,
+      //Especificación del dato que se requiere del usuario (nombre y apellido)
+      registro: `${tipoActivo.registro?.primerNombre ?? ''} ${tipoActivo.registro?.primerApellido ?? ''}`.trim(),
+      estado: tipoActivo.estado,
+      motivo_inactivar: tipoActivo.motivo_inactivar,
+      es_nuevo: tipoActivo.es_nuevo,
+
+    };
+  }
 
    async findAll(params: paginationTipoAcDTO): Promise<ITipoActivoPaginatedResponse> {
     const {per_page, page, paginate, directionOrder, nombre} = params;
@@ -66,15 +80,7 @@ export class TipoActivoService {
 
     const [tipoactivo, count] = await this.tipoActivoRepository.findAndCount(findOptions);
 
-    const resultado: ITipoActivo[] = tipoactivo.map(t => ({
-      id: t.id,
-      nombre: t.nombre,
-      //Especificación del dato que se requiere del usuario (nombre y apellido)
-      registro: `${t.registro?.primerNombre ?? ''} ${t.registro?.primerApellido ?? ''}`.trim(),
-      estado: t.estado,
-      motivo_inactivar: t.motivo_inactivar,
-      es_nuevo: t.es_nuevo,
-    }));
+    const resultado: ITipoActivo[] = tipoactivo.map(tipoactivo => this.transformInterface(tipoactivo));
 
     return {
       tipoactivo: resultado,
@@ -96,17 +102,7 @@ export class TipoActivoService {
     if (!tipoactivo) {
       throw new NotFoundException('Tipo de activo not found')
     }
-
-    return {
-      id: tipoactivo.id,
-      nombre: tipoactivo.nombre,
-      //Especificación del dato que se requiere del usuario (nombre y apellido)
-      registro: `${tipoactivo.registro?.primerNombre ?? ''} ${tipoactivo.registro?.primerApellido ?? ''}`.trim(),
-      estado: tipoactivo.estado,
-      motivo_inactivar: tipoactivo.motivo_inactivar,
-      es_nuevo: tipoactivo.es_nuevo,
-    };
-   
+    return this.transformInterface(tipoactivo);
   }
 
   //Creación del Tipo de Activo
@@ -125,20 +121,21 @@ export class TipoActivoService {
       id: uuidv4(),
       nombre,
       registro: usuario,
+      estado: estadoAct.Inactivo, //el registro siempre iniciara como 'inactivo'
+      motivo_inactivar: null,
+      es_nuevo: true,
       createAt: moment().tz('America/El_Salvador').format(),
     });
 
     const savedTipoActivo = await this.tipoActivoRepository.save(tipoactivo);
     
-    return {
-      id: savedTipoActivo.id,
-      nombre: savedTipoActivo.nombre,
-      //Especificación del dato que se requiere del usuario (nombre y apellido)
-      registro: `${usuario.primerNombre} ${usuario.primerApellido}`.trim(),
-      estado: savedTipoActivo.estado,
-      motivo_inactivar: savedTipoActivo.motivo_inactivar,
-      es_nuevo: savedTipoActivo.es_nuevo,
-    };
+    //Busca relación para ejecurtar transformInterface
+      const tipoActivoRelation = await this.tipoActivoRepository.findOne({
+        where: {id: savedTipoActivo.id},
+        relations: { registro: true }
+      })
+
+    return this.transformInterface(tipoActivoRelation);
   }
 
   //Actualización de datos del Tipo de Activo
@@ -152,7 +149,6 @@ export class TipoActivoService {
       const tipoactivo = await this.tipoActivoRepository.preload({
         id,
         nombre,
-        //registro: user,
         updateAt: moment().tz('America/El_Salvador').format(),
       });
 
@@ -160,29 +156,91 @@ export class TipoActivoService {
         throw new NotFoundException('Tipo de activo not found')
       }
     
-      const updateTipoActivo = await this.tipoActivoRepository.save(tipoactivo);
+      await this.tipoActivoRepository.save(tipoactivo);
 
-      //Busca relación
+      //Busca relación para ejecurtar transformInterface
       const tipoActivoRelation = await this.tipoActivoRepository.findOne({
         where: {id},
         relations: { registro: true }
       })
-      return {
-      id: updateTipoActivo.id,
-      nombre: updateTipoActivo.nombre,
-      //Especificación del dato que se requiere del usuario (nombre y apellido)
-      registro: `${tipoActivoRelation.registro?.primerNombre ?? ''} ${tipoActivoRelation.registro?.primerApellido ?? ''}`.trim(),
-      estado: updateTipoActivo.estado,
-      motivo_inactivar: updateTipoActivo.motivo_inactivar,
-      es_nuevo: updateTipoActivo.es_nuevo,
-    };
+      return this.transformInterface(tipoActivoRelation);
   }
 
+
+  //activar un registro
+  async activar(id: string, activarTipoActivoDto: ActivarTipoActivoDto, userId?: string): Promise<ITipoActivo> {
+    if(!activarTipoActivoDto.confirmar){
+      throw new BadRequestException('Debe confirmar la activación del tipo de activo');
+    }
+
+    const tipoactivo = await this.tipoActivoRepository.findOne({
+      where: {id},
+      relations: { registro: true}
+    });
+
+    if(!tipoactivo){
+        throw new NotFoundException('Tipo de activo not found')
+      }
+
+    if(tipoactivo.estado === 'Activo') {
+      throw new BadRequestException('El tipo de activo ya esta activado');
+    }
+
+    const usuario = await this.usersService.findOne(userId);
+    
+    tipoactivo.registro = usuario;
+    tipoactivo.estado = estadoAct.Activo;
+    tipoactivo.es_nuevo = false;
+    tipoactivo.motivo_inactivar = null;
+
+    await this.tipoActivoRepository.save(tipoactivo);
+    return this.transformInterface(tipoactivo);
+  }
+
+   async desactivar(id: string, desactivarTipoActivoDto: DesactivarTipoActivoDto, userId?: string): Promise<ITipoActivo> {
+    
+    const tipoactivo = await this.tipoActivoRepository.findOne({
+      where: {id},
+      relations: { registro: true}
+    });
+
+    if(!tipoactivo){
+        throw new NotFoundException('Tipo de activo not found')
+      }
+
+    if(tipoactivo.estado === 'Activo') {
+      throw new BadRequestException('El tipo de activo ya esta activado');
+    }
+
+    const usuario = await this.usersService.findOne(userId);
+    
+    tipoactivo.registro = usuario;
+    tipoactivo.estado = estadoAct.Inactivo;
+    tipoactivo.motivo_inactivar = desactivarTipoActivoDto.justificacion;
+
+    await this.tipoActivoRepository.save(tipoactivo);
+    return this.transformInterface(tipoactivo);
+  }
+
+
   //Eliminación del Tipo de activo
-  async delete (id: string, delateTipoActivoDto: DelateTipoActivoDto): Promise<void> {
-    const {justificacion} = delateTipoActivoDto;
-    //falta difinir la justificacion
-    await this.findOne(id);
+  async delete (id: string): Promise<void> {
+    const tipoactivo = await this.tipoActivoRepository.findOne({
+      where:{id}
+    });
+
+    if(!tipoactivo){
+        throw new NotFoundException('Tipo de activo not found')
+      }
+    
+    if (!tipoactivo.es_nuevo) {
+      throw new BadRequestException('No se puede eliminar un Tipo de Activo que ha sido activado')
+    }
+
+    if(tipoactivo.estado === 'Activo') {
+      throw new BadRequestException('No se puede eliminar un Tipo de Activo "activado". Se debe de desactivar');
+    }
+
     await this.tipoActivoRepository.softDelete(id);
   }
 }

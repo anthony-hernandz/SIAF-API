@@ -15,8 +15,8 @@ import { MntUsers } from "@users/entities";
 //import { MntCaracteristicas } from "../../caracteristicas/entities/caracteristica.entity";
 
 export enum estadoAct{
-  Activo = 'activo',
-  Inactivo = 'inactivo'
+  Activo = 'Activo',
+  Inactivo = 'Inactivo'
 }
 
 @Entity('mnt_tipo_activo')
