@@ -12,6 +12,7 @@ import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_ac
 import { TipofinanciamientoModule } from './administracion/catalogs/tipofinanciamiento/tipofinanciamiento.module';
 import { DependenciaModule } from './dependencia/dependencia.module';
 import { GrupoModule } from './administracion/catalogs/grupo/grupo.module';
+import { ClaseModule } from './administracion/catalogs/clase/clase.module';
 
 
 @Module({
@@ -29,6 +30,7 @@ import { GrupoModule } from './administracion/catalogs/grupo/grupo.module';
     TipofinanciamientoModule,
     DependenciaModule,
     GrupoModule,
+    ClaseModule,
 
   ],
   controllers: [],
