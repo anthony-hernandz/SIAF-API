@@ -66,6 +66,7 @@ export class UsersService {
       establecimiento: { institucion: true },
     };
     findOptions.select = {
+      id: true,
       primerNombre: true,
       primerApellido: true,
       n_documento: true,
