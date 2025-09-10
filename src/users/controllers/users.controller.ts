@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/services/users.service';
@@ -27,7 +28,8 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all users' })
   @Get()
-  async findAll(@Param() paramsUsers: paginationUsersDTO) {
+  // Uso de @Query para la busqueda de usuarios en tiempo real
+  async findAll(@Query() paramsUsers: paginationUsersDTO) {
     return await this.usersService.findAll(paramsUsers);
   }
 

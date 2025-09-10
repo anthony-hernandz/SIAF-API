@@ -6,5 +6,5 @@ export class paginationUsersDTO extends paginationDto {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional()
-  public readonly email: string;
+  public readonly username: string;
 }
