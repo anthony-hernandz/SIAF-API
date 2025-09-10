@@ -1,5 +1,5 @@
 import { PartialType } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 
 export class CreateTipoActivoDto {
@@ -15,7 +15,12 @@ export class CreateTipoActivoDto {
 export class UpdateTipoActivoDto extends
 PartialType(CreateTipoActivoDto){}
 
-export class DelateTipoActivoDto{
+export class ActivarTipoActivoDto{
+    @IsBoolean({message: 'Se debe confirmar la activacion'})
+    confirmar: boolean;
+}
+
+export class DesactivarTipoActivoDto{
     @IsNotEmpty()
     @IsString()
     @MinLength(6)
