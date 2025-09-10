@@ -47,12 +47,25 @@ export class UsersService {
   ) {}
 
   async findAll(params: paginationUsersDTO) {
-    const { per_page, page, paginate, directionOrder, email } = params;
+    const { per_page, page, paginate, directionOrder, username } = params;
 
+    // Validacion para que el valor de busqueda tenga minimo 3 caracteres
+    if (username && username.length < 3) {
+      throw new BadRequestException('El término de búsqueda debe tener al menos 3 caracteres');
+    }
+    
     const findOptions: FindManyOptions<MntUsers> = {};
-    const where: FindOptionsWhere<MntUsers> = {};
 
-    if (email) where.email = ILike(`%${email || ''}%`);
+    // Si hay valor de busqueda, filtramos tanto por los nombres y apellidos
+    if (username) {
+      findOptions.where = [
+        { primerNombre: ILike(`%${username}%`) },
+        { segundoNombre: ILike(`%${username}%`) },
+        { tercerNombre: ILike(`%${username}%`) },
+        { primerApellido: ILike(`%${username}%`) },
+        { segundoApellido: ILike(`%${username}%`) },
+      ];
+    }
 
     if (paginate) {
       findOptions.take = per_page;
@@ -73,7 +86,6 @@ export class UsersService {
       rol: { id: true, name: true },
       establecimiento: { nombre: true, institucion: { nombre: true } },
     };
-    findOptions.where = where;
 
     const [users, count] = await this.usersRepository.findAndCount(findOptions);
     return {
