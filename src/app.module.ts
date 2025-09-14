@@ -28,7 +28,7 @@ import { ProcedenciaModule } from './administracion/catalogs/procedencia/procede
     TipoActivoModule,
     TipofinanciamientoModule,
     DependenciaModule,
-    EstadoActivoFisicoModule,
+    ProcedenciaModule,
 
   ],
   controllers: [],

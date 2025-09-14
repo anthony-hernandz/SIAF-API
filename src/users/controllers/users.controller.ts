@@ -65,11 +65,11 @@ export class UsersController {
   permisosById(@Param('id') id: string) {
     return this.usersService.findPermissionsById(id);
   }
-
+  
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List a user' })
   @Put('/:id')
-  async update(@Param() id: string, @Body() data: updateUserDTO) {
+  async update(@Param('id') id: string, @Body() data: updateUserDTO) {
     return await this.usersService.update(id, data);
   }
 
