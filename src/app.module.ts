@@ -13,6 +13,7 @@ import { TipofinanciamientoModule } from './administracion/catalogs/tipofinancia
 import { DependenciaModule } from './dependencia/dependencia.module';
 import { GrupoModule } from './administracion/catalogs/grupo/grupo.module';
 import { ClaseModule } from './administracion/catalogs/clase/clase.module';
+import { SubclaseModule } from './administracion/catalogs/subclase/subclase.module';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { ClaseModule } from './administracion/catalogs/clase/clase.module';
     DependenciaModule,
     GrupoModule,
     ClaseModule,
+    SubclaseModule,
 
   ],
   controllers: [],
