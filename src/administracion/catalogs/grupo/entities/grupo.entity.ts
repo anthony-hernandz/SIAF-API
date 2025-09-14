@@ -14,7 +14,7 @@ export enum EstadoRegistro {
   INACTIVO = 'INACTIVO',
 }
 
-@Entity({ name: 'cat_grupo' })
+@Entity({ name: 'mnt_grupo' })
 @Unique(['nombre'])
 @Unique(['codigo'])
 export class Grupo {
