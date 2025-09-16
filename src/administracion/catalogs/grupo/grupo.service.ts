@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, Not, Repository } from 'typeorm';
 import { Grupo, EstadoRegistro } from './entities/grupo.entity';
 import { CreateGrupoDto } from './dto/create-grupo.dto';
 import { UpdateGrupoDto } from './dto/update-grupo.dto';
@@ -14,7 +14,7 @@ import { DesactivarGrupoDto } from './dto/desactivar-grupo.dto';
 export class GrupoService {
   constructor(
     @InjectRepository(Grupo)
-    private repo: Repository<Grupo>,
+    private readonly repo: Repository<Grupo>,
   ) {}
 
   async search(query?: string, page = 1, limit = 10) {
@@ -32,16 +32,25 @@ export class GrupoService {
   }
 
   async create(dto: CreateGrupoDto, usuario?: string) {
-    const exists =
-      (await this.repo.findOne({ where: { nombre: dto.nombre } })) ||
-      (await this.repo.findOne({ where: { codigo: dto.codigo } }));
-
-    if (exists) throw new BadRequestException('El código o nombre ya existe');
+    const dupNombre = await this.repo.findOne({
+      where: { nombre: dto.nombre },
+    });
+    const dupCodigo = await this.repo.findOne({
+      where: { codigo: dto.codigo },
+    });
+    if (dupNombre || dupCodigo) {
+      throw new BadRequestException(
+        `Ya existe un grupo con el mismo ${
+          dupNombre ? 'nombre' : 'código'
+        } registrado.`,
+      );
+    }
 
     const entity = this.repo.create({
-      ...dto,
-      personal_que_registro: usuario || null,
-      estado: EstadoRegistro.INACTIVO,
+      codigo: dto.codigo,
+      nombre: dto.nombre,
+      personal_que_registro: dto.personal_que_registro ?? usuario ?? null,
+      estado: dto.estado ?? EstadoRegistro.INACTIVO,
       es_nuevo: true,
     });
     return this.repo.save(entity);
@@ -50,7 +59,33 @@ export class GrupoService {
   async update(id: string, dto: UpdateGrupoDto) {
     const g = await this.repo.findOne({ where: [{ id }] });
     if (!g) throw new NotFoundException('Grupo no encontrado');
-    Object.assign(g, dto);
+
+    if (dto.codigo) {
+      const dup = await this.repo.findOne({
+        where: { codigo: dto.codigo, id: Not(id) },
+      });
+      if (dup)
+        throw new BadRequestException('Ya existe un grupo con el mismo código');
+      g.codigo = dto.codigo;
+    }
+    if (dto.nombre) {
+      const dup = await this.repo.findOne({
+        where: { nombre: dto.nombre, id: Not(id) },
+      });
+      if (dup) {
+        throw new BadRequestException('Ya existe un grupo con el mismo nombre');
+      }
+      g.nombre = dto.nombre;
+    }
+    if (dto.personal_que_registro !== undefined) {
+      g.personal_que_registro = dto.personal_que_registro;
+    }
+    if (dto.estado !== undefined) {
+      g.estado = dto.estado;
+    }
+    if (dto.motivoDesactivacion !== undefined) {
+      (g as any).motivo_desactivacion = dto.motivoDesactivacion || null;
+    }
     g.fecha_actualizacion = new Date();
     return this.repo.save(g);
   }
@@ -60,6 +95,7 @@ export class GrupoService {
     if (!g) throw new NotFoundException('Grupo no encontrado');
     g.estado = EstadoRegistro.ACTIVO;
     g.es_nuevo = false;
+    (g as any).motivo_desactivacion = null;
     g.fecha_actualizacion = new Date();
     return this.repo.save(g);
   }
@@ -68,17 +104,18 @@ export class GrupoService {
     const g = await this.repo.findOne({ where: { id }, relations: ['clases'] });
     if (!g) throw new NotFoundException('Grupo no encontrado');
     const tieneClasesActivas = (g.clases ?? []).some(
-      (c: any) => c.estado === 'activo',
+      (c: any) => c.estado === EstadoRegistro.ACTIVO || c.estado === 'activo ',
     );
     if (tieneClasesActivas) {
       throw new BadRequestException(
         'No se puede desactivar el grupo porque tiene clases activas.',
       );
-
-      g.estado = EstadoRegistro.INACTIVO;
-      g.fecha_actualizacion = new Date();
-      return this.repo.save(g);
     }
+
+    g.estado = EstadoRegistro.INACTIVO;
+    (g as any).motivo_desactivacion = dto.motivo;
+    g.fecha_actualizacion = new Date();
+    return this.repo.save(g);
   }
 
   async remove(id: string) {
