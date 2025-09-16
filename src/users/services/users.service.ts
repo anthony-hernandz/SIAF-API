@@ -79,6 +79,7 @@ export class UsersService {
       establecimiento: { institucion: true },
     };
     findOptions.select = {
+      id: true,
       primerNombre: true,
       primerApellido: true,
       n_documento: true,
@@ -160,7 +161,7 @@ export class UsersService {
 
   async update(id: string, updateUserDTO: updateUserDTO): Promise<MntUsers> {
     const { idRol, email, primerNombre, segundoNombre,tercerNombre, primerApellido, segundoApellido,
-      fecha_nacimiento,n_documento, establecimiento, pais, dependencia} = updateUserDTO;
+      fecha_nacimiento,n_documento, establecimiento, pais, dependencia, username} = updateUserDTO;
     const oldUser = await this.findOne(id);
 
     if (email) {
@@ -183,7 +184,7 @@ export class UsersService {
       n_documento,
       establecimiento: establecimiento ? { id: establecimiento } : null, 
       dependencia: dependencia ? { id: dependencia } : null, 
-
+      username,
       pais: pais ? { id: pais } : null,
       updateAt: moment().tz('America/El_Salvador').format(),
     });
