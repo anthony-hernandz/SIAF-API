@@ -84,6 +84,8 @@ export class UsersService {
       primerApellido: true,
       n_documento: true,
       active: true,
+      createAt: true,
+      updateAt: true,
       rol: { id: true, name: true },
       establecimiento: { nombre: true, institucion: { nombre: true } },
     };
@@ -409,4 +411,18 @@ export class UsersService {
   async getPaises() {
     return await this.paisesRepository.find();
   }
+
+  //Cambiando el estado de un usuario
+  async changeEstado(id: string, activo: boolean) {
+  const user = await this.findOne(id); //Asegurando que el usuario existe.
+
+  user.active = activo;
+  user.updateAt = moment().tz('America/El_Salvador').toDate();
+
+  return await this.usersRepository.save(user);
+}
+
+
+
+
 }

@@ -10,7 +10,10 @@ import {
   Put,
   Query,
   UseGuards,
+  Patch,
+  
 } from '@nestjs/common';
+import { Public } from '@auth/decorators/public.decorator';
 import { UsersService } from 'src/users/services/users.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@auth/guards/jwt.guard';
@@ -86,4 +89,17 @@ export class UsersController {
   async delete(@Param('id') id: string) {
     return await this.usersService.delete(id);
   }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Endpoint para Activar/Desactivar usuario' })
+  @Patch('/:id/estado')
+  async changeEstado(
+    @Param('id') id: string,
+    @Body('activo') activo: boolean,
+  ) {
+    return await this.usersService.changeEstado(id, activo);
+  }
+
+
 }
