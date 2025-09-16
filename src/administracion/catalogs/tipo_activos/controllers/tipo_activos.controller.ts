@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { TipoActivoService } from '../tipo_activos.service';
 import { ActivarTipoActivoDto, CreateTipoActivoDto, DesactivarTipoActivoDto, UpdateTipoActivoDto } from '../dto/tipo_activo.dto';
-import { paginationTipoAcDTO } from '../dto/tipoactivo-pagination';
+import { paginationTipoAcDTO } from '../dto/tipoactivo-pagination.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 //import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 

@@ -17,7 +17,7 @@ import * as moment from 'moment-timezone';
 
 import { ActivarTipoActivoDto, CreateTipoActivoDto, DesactivarTipoActivoDto, UpdateTipoActivoDto } from './dto/tipo_activo.dto';
 import { estadoAct, MntTipoActivo } from './entities/tipo_activo.entity';
-import { paginationTipoAcDTO } from './dto/tipoactivo-pagination';
+import { paginationTipoAcDTO } from './dto/tipoactivo-pagination.dto';
 import { UsersService } from '@users/services/users.service';
 import { ITipoActivo, ITipoActivoPaginatedResponse } from './tipo-activo.interface';
 
@@ -30,7 +30,7 @@ export class TipoActivoService {
     private readonly usersService: UsersService,
   ) {}
 
-  //Evitar repeticion
+  //Refactorización
   private transformInterface(tipoActivo: MntTipoActivo): ITipoActivo{
     return{
       id: tipoActivo.id,
@@ -197,6 +197,7 @@ export class TipoActivoService {
     return this.transformInterface(tipoactivo);
   }
 
+  //desactivar un registro
    async desactivar(id: string, desactivarTipoActivoDto: DesactivarTipoActivoDto, userId?: string): Promise<ITipoActivo> {
     
     const tipoactivo = await this.tipoActivoRepository.findOne({
@@ -238,7 +239,7 @@ export class TipoActivoService {
     }
 
     if(tipoactivo.estado === 'Activo') {
-      throw new BadRequestException('No se puede eliminar un Tipo de Activo "activado". Se debe de desactivar');
+      throw new BadRequestException('No se puede eliminar un Tipo de Activo "activado"');
     }
 
     await this.tipoActivoRepository.softDelete(id);
