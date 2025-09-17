@@ -178,7 +178,7 @@ export class ProcedenciaService {
         throw new NotFoundException('Procedencia not found')
       }
   
-    if(procedencia.estado === 'Activo') {
+    if(procedencia.estado === estadoAct.Activo) {
       throw new BadRequestException('La Procedencia ya esta activada');
     }
   
@@ -204,8 +204,8 @@ export class ProcedenciaService {
         throw new NotFoundException('Procedencia not found')
       }
   
-    if(procedencia.estado === 'Activo') {
-      throw new BadRequestException('La Procedencia ya esta activada');
+    if(procedencia.estado === estadoAct.Inactivo) {
+      throw new BadRequestException('La Procedencia ya esta desactivado');
     }
   
     const usuario = await this.usersService.findOne(userId);
@@ -228,10 +228,10 @@ export class ProcedenciaService {
       }
     
     if (!procedencia.es_nuevo) {
-      throw new BadRequestException('No se puede eliminar una Procedencia que ha sido activada')
+        throw new BadRequestException('No se puede eliminar el registro que ya no es nuevo');
     }
 
-    if(procedencia.estado === 'Activo') {
+    if(procedencia.estado === estadoAct.Activo) {
       throw new BadRequestException('No se puede eliminar una procedencia "activada"');
     }
 

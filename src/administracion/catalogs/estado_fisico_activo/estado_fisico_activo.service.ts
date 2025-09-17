@@ -164,7 +164,7 @@ export class EstadoFisicoActivoService {
           throw new NotFoundException('Estado Fisico de Activo not found')
         }
       
-      if(estadoFisicoActivo.estado === 'Activo') {
+      if(estadoFisicoActivo.estado === estadoAct.Activo) {
         throw new BadRequestException('El Estado Fisico de Activo ya esta activado');
       }
       
@@ -172,8 +172,8 @@ export class EstadoFisicoActivoService {
           
       estadoFisicoActivo.registro = usuario;
       estadoFisicoActivo.estado = estadoAct.Activo;
-      estadoFisicoActivo.es_nuevo = false;
-      estadoFisicoActivo.motivo_inactivar = null;
+      estadoFisicoActivo.es_nuevo = false; //Una vez activado, no es nuevo
+      estadoFisicoActivo.motivo_inactivar = null; //Eliminar justificacion anterior
       
       await this.estadoFisicoActivoRepository.save(estadoFisicoActivo);
       return this.transformInterface(estadoFisicoActivo);
@@ -189,9 +189,13 @@ export class EstadoFisicoActivoService {
       if(!estadoFisicoActivo){
           throw new NotFoundException('Estado Fisico de Activo not found')
         }
+
+      if(!estadoFisicoActivo.es_nuevo){
+        throw new BadRequestException('No se puede eliminar el registro que ya no es nuevo');
+      }
     
-      if(estadoFisicoActivo.estado === 'Activo') {
-        throw new BadRequestException('El Estado Fisico de Activo ya esta activado');
+      if(estadoFisicoActivo.estado === estadoAct.Inactivo) {
+        throw new BadRequestException('El Estado Fisico de Activo ya esta desactivado');
       }
     
       const usuario = await this.usersService.findOne(userId);
@@ -217,7 +221,7 @@ export class EstadoFisicoActivoService {
       throw new BadRequestException('No se puede eliminar un Estado Fisico de Activo que ha sido activado')
     }
 
-    if(estadoFisicoActivo.estado === 'Activo') {
+    if(estadoFisicoActivo.estado === estadoAct.Activo) {
       throw new BadRequestException('No se puede eliminar un Estado Fisico de Activo "activado"');
     }
 
