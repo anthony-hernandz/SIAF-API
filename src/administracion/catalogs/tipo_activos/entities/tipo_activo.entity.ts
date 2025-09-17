@@ -12,7 +12,7 @@ import {
 } from "typeorm";
 import { Exclude } from "class-transformer";
 import { MntUsers } from "@users/entities";
-//import { MntCaracteristicas } from "../../caracteristicas/entities/caracteristica.entity";
+import { MntCaracteristicas } from "../../caracteristicas/entities/caracteristica.entity";
 
 export enum estadoAct{
   Activo = 'Activo',
@@ -44,32 +44,34 @@ export class MntTipoActivo {
     es_nuevo: boolean;
 
     @Exclude()
-      @CreateDateColumn({
-        type: 'timestamptz',
-        default: () => 'CURRENT_TIMESTAMP',
-        name: 'created_at',
-      })
-      createAt: Date;
+    @CreateDateColumn({
+      type: 'timestamptz',
+      default: () => 'CURRENT_TIMESTAMP',
+      name: 'created_at',
+    })
+    createAt: Date;
     
-      @Exclude()
-      @UpdateDateColumn({
-        type: 'timestamptz',
-        name: 'updated_at',
-      })
-      updateAt: Date;
+    @Exclude()
+    @UpdateDateColumn({
+      type: 'timestamptz',
+      name: 'updated_at',
+    })
+    updateAt: Date;
     
-      @Exclude()
-      @DeleteDateColumn({
-        type: 'timestamptz',
-        name: 'deleted_at',
-      })
-      deletedAt: Date;
+    @Exclude()
+    @DeleteDateColumn({
+      type: 'timestamptz',
+      name: 'deleted_at',
+    })
+    deletedAt: Date;
 
-    @ManyToOne(() => MntUsers, {eager: true})
+    @ManyToOne(() => MntUsers, {eager: true, nullable: true})
     @JoinColumn({name: 'id_registro'})
     registro: MntUsers;
 
-    // @ManyToOne(() => MntCaracteristicas, (caracteristica) => caracteristica.tiposActivo)
-    // @JoinColumn({name: 'id_caracteristica'})
-    // caracteristica: MntCaracteristicas;
+    @ManyToOne(() => MntCaracteristicas, (caracteristica) => caracteristica.tiposActivo)
+    @JoinColumn({name: 'id_caracteristica'})
+    caracteristica: MntCaracteristicas;
+
+    
 }

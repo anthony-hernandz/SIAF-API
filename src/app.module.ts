@@ -12,6 +12,7 @@ import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_ac
 import { TipofinanciamientoModule } from './administracion/catalogs/tipofinanciamiento/tipofinanciamiento.module';
 import { DependenciaModule } from './dependencia/dependencia.module';
 import { ProcedenciaModule } from './administracion/catalogs/procedencia/procedencia.module';
+import { EstadoFisicoActivoModule } from './administracion/catalogs/estado_fisico_activo/estado_fisico_activo.module';
 
 
 @Module({
@@ -29,6 +30,8 @@ import { ProcedenciaModule } from './administracion/catalogs/procedencia/procede
     TipofinanciamientoModule,
     DependenciaModule,
     ProcedenciaModule,
+    EstadoFisicoActivoModule,
+
 
   ],
   controllers: [],
