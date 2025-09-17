@@ -218,7 +218,7 @@ export class EstadoFisicoActivoService {
       }
     
     if (!estadoFisicoActivo.es_nuevo) {
-      throw new BadRequestException('No se puede eliminar un Estado Fisico de Activo que ha sido activado')
+      throw new BadRequestException('No se puede eliminar un Estado Fisico de Activo que ya no es nuevo')
     }
 
     if(estadoFisicoActivo.estado === estadoAct.Activo) {
