@@ -209,9 +209,9 @@ export class TipoActivoService {
         throw new NotFoundException('Tipo de activo not found')
       }
 
-    if(!tipoactivo.es_nuevo){
-        throw new BadRequestException('No se puede eliminar el registro que ya no es nuevo');
-    }
+    // if(!tipoactivo.es_nuevo){
+    //     throw new BadRequestException('No se puede eliminar el registro que ya no es nuevo');
+    // }
 
     if(tipoactivo.estado === estadoAct.Inactivo) {
       throw new BadRequestException('El tipo de activo ya esta desactivado');

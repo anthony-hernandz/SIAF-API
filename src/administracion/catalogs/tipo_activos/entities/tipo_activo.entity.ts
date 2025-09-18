@@ -12,7 +12,7 @@ import {
 } from "typeorm";
 import { Exclude } from "class-transformer";
 import { MntUsers } from "@users/entities";
-import { MntCaracteristicas } from "../../caracteristicas/entities/caracteristica.entity";
+//import { MntCaracteristicas } from "../../caracteristicas/entities/caracteristica.entity";
 
 export enum estadoAct{
   Activo = 'Activo',
@@ -69,9 +69,9 @@ export class MntTipoActivo {
     @JoinColumn({name: 'id_registro'})
     registro: MntUsers;
 
-    @ManyToOne(() => MntCaracteristicas, (caracteristica) => caracteristica.tiposActivo)
-    @JoinColumn({name: 'id_caracteristica'})
-    caracteristica: MntCaracteristicas;
+    // @ManyToOne(() => MntCaracteristicas, (caracteristica) => caracteristica.tiposActivo)
+    // @JoinColumn({name: 'id_caracteristica'})
+    // caracteristica: MntCaracteristicas;
 
     
 }
