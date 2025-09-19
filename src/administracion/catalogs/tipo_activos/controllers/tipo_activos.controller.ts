@@ -9,17 +9,18 @@ import {
   HttpStatus,
   Request,
   Put,
-  Patch
+  Patch,
+  UseGuards
 } from '@nestjs/common';
 import { TipoActivoService } from '../tipo_activos.service';
 import { ActivarTipoActivoDto, CreateTipoActivoDto, DesactivarTipoActivoDto, UpdateTipoActivoDto } from '../dto/tipo_activo.dto';
 import { paginationTipoAcDTO } from '../dto/tipoactivo-pagination.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-//import { JwtAuthGuard } from '@auth/guards/jwt.guard';
+import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 
 @ApiTags('tipoActivo')
 @Controller('admin/catalogs/tipo-activo-catalogo')
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class TipoActivoController {
   constructor(private readonly tipoActivoService: TipoActivoService) {}
 
@@ -34,8 +35,8 @@ export class TipoActivoController {
   @ApiOperation({ summary: 'Create tipo de activo' })
   @Post()
   async create(@Body() data: CreateTipoActivoDto, @Request() req: any) {
-    //const userId = req.user.id;
-    const userId = "57ff12f4-ab9e-453a-b75a-d45d55dad9e4"
+    const userId = req.user.id;
+    //const userId = "57ff12f4-ab9e-453a-b75a-d45d55dad9e4"
     return await this.tipoActivoService.create(data, userId);
   }
 
