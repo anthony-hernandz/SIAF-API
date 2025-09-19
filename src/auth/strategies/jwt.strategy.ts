@@ -24,7 +24,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(request: Request, payload: IToken): Promise<boolean> {
+  // Se cambio el tipo de retorno de 'boolean' a 'any' para poder devolver el ID del usuario activo
+  async validate(request: Request, payload: IToken): Promise<any> {
     const idUser: string = payload['sub'];
 
     const endpoint: string = request.route.path;
@@ -40,6 +41,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       method,
     );
 
-    return true;
+    // Devuelve el ID del usuario usarlo en los controllers y services
+    return {
+      id: user.id
+    };
   }
 }
