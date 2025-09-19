@@ -179,10 +179,7 @@ export class AmbientesService {
     if(ambiente.estado === estadoAct.Activo) {
       throw new BadRequestException('El Ambiente ya esta activada');
     }
-    
-    const usuario = await this.usersService.findOne(userId);
         
-    ambiente.registro = usuario;
     ambiente.estado = estadoAct.Activo;
     ambiente.es_nuevo = false;
     ambiente.motivo_inactivar = null;
@@ -206,9 +203,6 @@ export class AmbientesService {
         throw new BadRequestException('El ambiente ya esta desactivado');
       }
       
-      const usuario = await this.usersService.findOne(userId);
-          
-      ambiente.registro = usuario;
       ambiente.estado = estadoAct.Inactivo;
       ambiente.motivo_inactivar = desactivarmbienteDto.justificacion;
       

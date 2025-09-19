@@ -182,9 +182,6 @@ export class ProcedenciaService {
       throw new BadRequestException('La Procedencia ya esta activada');
     }
   
-    const usuario = await this.usersService.findOne(userId);
-      
-    procedencia.registro = usuario;
     procedencia.estado = estadoAct.Activo;
     procedencia.es_nuevo = false;
     procedencia.motivo_inactivar = null;
@@ -208,9 +205,6 @@ export class ProcedenciaService {
       throw new BadRequestException('La Procedencia ya esta desactivado');
     }
   
-    const usuario = await this.usersService.findOne(userId);
-      
-    procedencia.registro = usuario;
     procedencia.estado = estadoAct.Inactivo;
     procedencia.motivo_inactivar = desactivarProcedenciaDto.justificacion;
   

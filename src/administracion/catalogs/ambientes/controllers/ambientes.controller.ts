@@ -15,9 +15,12 @@ import { AmbientesService } from '../ambientes.service';
 import { ActivarAmbienteDto, CreateAmbienteDto, DesactivarAmbienteDto, UpdateAmbienteDto } from '../dto/ambiente.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { paginationAmbienteDTO } from '../dto/ambiente-pagination.dto';
+//import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 
 @ApiTags('ambientes')
 @Controller('admin/catalogs/ambientes-catalogo')
+//@UseGuards(JwtAuthGuard)
+
 export class AmbientesController {
   constructor(private readonly ambientesService: AmbientesService) {}
 
@@ -33,6 +36,7 @@ export class AmbientesController {
   @ApiOperation({ summary: 'Create Ambiente' })
   @Post()
   async create(@Body() data: CreateAmbienteDto, @Request() req: any) {
+    //const userId = req.user.id;
     const userId = "57ff12f4-ab9e-453a-b75a-d45d55dad9e4"
     return await this.ambientesService.create(data, userId);
   }

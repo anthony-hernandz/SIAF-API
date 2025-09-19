@@ -168,9 +168,6 @@ export class EstadoFisicoActivoService {
         throw new BadRequestException('El Estado Fisico de Activo ya esta activado');
       }
       
-      const usuario = await this.usersService.findOne(userId);
-          
-      estadoFisicoActivo.registro = usuario;
       estadoFisicoActivo.estado = estadoAct.Activo;
       estadoFisicoActivo.es_nuevo = false; //Una vez activado, no es nuevo
       estadoFisicoActivo.motivo_inactivar = null; //Eliminar justificacion anterior
@@ -189,18 +186,11 @@ export class EstadoFisicoActivoService {
       if(!estadoFisicoActivo){
           throw new NotFoundException('Estado Fisico de Activo not found')
         }
-
-      if(!estadoFisicoActivo.es_nuevo){
-        throw new BadRequestException('No se puede eliminar el registro que ya no es nuevo');
-      }
     
       if(estadoFisicoActivo.estado === estadoAct.Inactivo) {
         throw new BadRequestException('El Estado Fisico de Activo ya esta desactivado');
       }
     
-      const usuario = await this.usersService.findOne(userId);
-        
-      estadoFisicoActivo.registro = usuario;
       estadoFisicoActivo.estado = estadoAct.Inactivo;
       estadoFisicoActivo.motivo_inactivar = desactivarEstadoFisicoActivoDto.justificacion;
     

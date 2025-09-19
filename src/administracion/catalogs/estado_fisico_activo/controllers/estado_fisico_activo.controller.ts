@@ -15,9 +15,11 @@ import { EstadoFisicoActivoService } from '../estado_fisico_activo.service';
 import { ActivarEstadoFisicoActivoDto, CreateEstadoFisicoActivoDto, DesactivarEstadoFisicoActivoDto, UpdateEstadoFisicoActivoDto } from '../dto/estado_fisico_activo.dto';
 import { paginationEstadoFisicoActivoDto } from '../dto/estado_fisico_activo-pagination.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+//import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 
 @ApiTags('estado-fisico-activo')
 @Controller('admin/catalogs/estado-fisico-activo-catalogo')
+//@UseGuards(JwtAuthGuard)
 export class EstadoFisicoActivoController {
   constructor(private readonly estadoFisicoActivoService: EstadoFisicoActivoService) {}
 

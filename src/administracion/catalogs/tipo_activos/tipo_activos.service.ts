@@ -186,9 +186,7 @@ export class TipoActivoService {
       throw new BadRequestException('El tipo de activo ya esta activado');
     }
 
-    const usuario = await this.usersService.findOne(userId);
-    
-    tipoactivo.registro = usuario;
+
     tipoactivo.estado = estadoAct.Activo;
     tipoactivo.es_nuevo = false; //Una vez activado, no es nuevo
     tipoactivo.motivo_inactivar = null; //Eliminar justificacion anterior
@@ -208,18 +206,11 @@ export class TipoActivoService {
     if(!tipoactivo){
         throw new NotFoundException('Tipo de activo not found')
       }
-
-    if(!tipoactivo.es_nuevo){
-        throw new BadRequestException('No se puede eliminar el registro que ya no es nuevo');
-    }
-
+      
     if(tipoactivo.estado === estadoAct.Inactivo) {
       throw new BadRequestException('El tipo de activo ya esta desactivado');
     }
 
-    const usuario = await this.usersService.findOne(userId);
-    
-    tipoactivo.registro = usuario;
     tipoactivo.estado = estadoAct.Inactivo;
     tipoactivo.motivo_inactivar = desactivarTipoActivoDto.justificacion;
 
