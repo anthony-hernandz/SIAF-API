@@ -14,6 +14,7 @@ import { DependenciaModule } from './dependencia/dependencia.module';
 import { ProcedenciaModule } from './administracion/catalogs/procedencia/procedencia.module';
 import { EstadoFisicoActivoModule } from './administracion/catalogs/estado_fisico_activo/estado_fisico_activo.module';
 import { AmbientesModule } from './administracion/catalogs/ambientes/ambientes.module';
+import { CaracteristicasModule } from './administracion/catalogs/caracteristicas/caracteristicas.module';
 
 
 @Module({
@@ -33,7 +34,7 @@ import { AmbientesModule } from './administracion/catalogs/ambientes/ambientes.m
     ProcedenciaModule,
     EstadoFisicoActivoModule,
     AmbientesModule,
-
+    CaracteristicasModule
 
   ],
   controllers: [],

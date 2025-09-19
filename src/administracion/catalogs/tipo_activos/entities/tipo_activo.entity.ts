@@ -69,9 +69,8 @@ export class MntTipoActivo {
     @JoinColumn({name: 'id_registro'})
     registro: MntUsers;
 
-    @ManyToOne(() => MntCaracteristicas, (caracteristica) => caracteristica.tiposActivo)
-    @JoinColumn({name: 'id_caracteristica'})
-    caracteristica: MntCaracteristicas;
+    @OneToMany(() => MntCaracteristicas, (caracteristica) => caracteristica.tipoActivo)
+    caracteristicas: MntCaracteristicas[];
 
     
 }
