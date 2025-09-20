@@ -47,11 +47,16 @@ export class TipoActivoService {
    async findAll(params: paginationTipoAcDTO): Promise<ITipoActivoPaginatedResponse> {
     const {per_page, page, paginate, directionOrder, nombre} = params;
 
+    // Validacion para que el valor de busqueda tenga minimo 3 caracteres
+    if (nombre && nombre.length < 4) {
+      throw new BadRequestException('El término de búsqueda debe tener al menos 3 caracteres');
+    }
+
     const findOptions: FindManyOptions<MntTipoActivo> = {};
     const where: FindOptionsWhere<MntTipoActivo> = {};
 
     //Busqueda por nombre
-    if (nombre && nombre.length >= 3) {
+    if (nombre) {
       where.nombre = ILike(`%${nombre}%`);
     }
 

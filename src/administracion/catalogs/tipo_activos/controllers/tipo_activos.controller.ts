@@ -10,7 +10,8 @@ import {
   Request,
   Put,
   Patch,
-  UseGuards
+  UseGuards,
+  Query
 } from '@nestjs/common';
 import { TipoActivoService } from '../tipo_activos.service';
 import { ActivarTipoActivoDto, CreateTipoActivoDto, DesactivarTipoActivoDto, UpdateTipoActivoDto } from '../dto/tipo_activo.dto';
@@ -27,7 +28,7 @@ export class TipoActivoController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({summary: 'List all Tipo de activo'})
   @Get()
-  async findAll(@Param() paramsTipoActivos: paginationTipoAcDTO) {
+  async findAll(@Query() paramsTipoActivos: paginationTipoAcDTO) {
     return this.tipoActivoService.findAll(paramsTipoActivos);
   }
 
