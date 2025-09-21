@@ -5,12 +5,13 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
+  JoinColumn,
 } from 'typeorm';
 import { Clase } from '../../clase/entities/clase.entity';
 
 export enum EstadoRegistro {
-  ACTIVO = 'activo',
-  INACTIVO = 'inactivo',
+  ACTIVO = 'ACTIVO',
+  INACTIVO = 'INACTIVO',
 }
 
 @Entity({ name: 'mnt_subclase' })
@@ -33,7 +34,7 @@ export class Subclase {
   @Column({
     type: 'enum',
     enum: EstadoRegistro,
-    default: EstadoRegistro.INACTIVO,
+    default: EstadoRegistro.INACTIVO
   })
   estado: EstadoRegistro;
 
@@ -53,5 +54,6 @@ export class Subclase {
     nullable: false,
     onDelete: 'RESTRICT',
   })
+  @JoinColumn({ name: 'clase_id' })
   clase: Clase;
 }

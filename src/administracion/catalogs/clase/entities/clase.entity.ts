@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
+  JoinColumn,
 } from 'typeorm';
 import { Grupo } from '../../grupo/entities/grupo.entity';
 import { Subclase } from '../../subclase/entities/subclase.entity';
@@ -52,6 +53,7 @@ export class Clase {
     nullable: false,
     onDelete: 'RESTRICT',
   })
+  @JoinColumn({ name: 'grupo_id' })
   grupo: Grupo;
 
   @OneToMany(() => Subclase, (s) => s.clase)

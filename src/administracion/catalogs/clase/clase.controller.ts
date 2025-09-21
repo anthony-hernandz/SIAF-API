@@ -7,54 +7,102 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ClaseService } from './clase.service';
 import { CreateClaseDto } from './dto/create-clase.dto';
 import { UpdateClaseDto } from './dto/update-clase.dto';
 import { DesactivarClaseDto } from './dto/desactivar-clase.dto';
 
-@ApiTags('administracion/catalogos/clase')
-@Controller('api/v1/administracion/catalogos/clase')
+@ApiTags('Catalogos - Clase')
+@ApiBearerAuth()
+@Controller('administracion/catalogos/clase')
 export class ClaseController {
   constructor(private readonly service: ClaseService) {}
 
-  @Get()
-  list(
-    @Query('q') q?: string,
-    @Query('page') page = '1',
-    @Query('limit') limit = 10,
-  ) {
-    return this.service.search(q, Number(page), Number(limit));
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+  @Get('ping')
+  @ApiOperation({ summary: 'Verifica si el servicio está activo' })
+  ping() {
+    return { ok: true, recurso: 'clase' };
   }
 
   @Post()
+  @ApiOperation({ summary: 'Crear una nueva clase' })
   create(@Body() dto: CreateClaseDto) {
     return this.service.create(dto);
   }
+  
+  @Get()
+  @ApiOperation({ summary: 'Listar clases (con búsqueda por nombre o código)' })
+  @ApiQuery({
+    name: 'q',
+    required: false })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'grupoId',
+    required: false,
+  })
+  list(
+    @Query('q') q?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('grupoId') grupoId?: string,
+  ) {
+    return this.service.search(q, page, Number(limit), grupoId);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener una clase por ID' })
+  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.service.findOne(id);
+  }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateClaseDto) {
+  @ApiOperation({ summary: 'Actualizar una clase' })
+  update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() dto: UpdateClaseDto,
+  ) {
     return this.service.update(id, dto);
   }
 
   @Patch(':id/activar')
-  activar(@Param('id') id: string) {
+  @ApiOperation({ summary: 'Activar una clase' })
+  activar(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.service.activar(id);
   }
 
   @Patch(':id/desactivar')
-  desactivar(@Param('id') id: string, @Body() dto: DesactivarClaseDto) {
+  @ApiOperation({ summary: 'Desactivar una clase' })
+  desactivar(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() dto: DesactivarClaseDto,
+  ) {
     return this.service.desactivar(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @ApiOperation({ summary: 'Eliminar una clase' })
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.service.remove(id);
+  }
+
+  @Get('activos')
+  @ApiOperation({ summary: 'Listar clases activas' })
+  activos(@Query('grupoId') grupoId?: string) {
+    return this.service.activos(grupoId);
   }
 }
