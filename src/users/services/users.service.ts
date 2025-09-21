@@ -47,12 +47,25 @@ export class UsersService {
   ) {}
 
   async findAll(params: paginationUsersDTO) {
-    const { per_page, page, paginate, directionOrder, email } = params;
+    const { per_page, page, paginate, directionOrder, username } = params;
 
+    // Validacion para que el valor de busqueda tenga minimo 3 caracteres
+    if (username && username.length < 3) {
+      throw new BadRequestException('El término de búsqueda debe tener al menos 3 caracteres');
+    }
+    
     const findOptions: FindManyOptions<MntUsers> = {};
-    const where: FindOptionsWhere<MntUsers> = {};
 
-    if (email) where.email = ILike(`%${email || ''}%`);
+    // Si hay valor de busqueda, filtramos tanto por los nombres y apellidos
+    if (username) {
+      findOptions.where = [
+        { primerNombre: ILike(`%${username}%`) },
+        { segundoNombre: ILike(`%${username}%`) },
+        { tercerNombre: ILike(`%${username}%`) },
+        { primerApellido: ILike(`%${username}%`) },
+        { segundoApellido: ILike(`%${username}%`) },
+      ];
+    }
 
     if (paginate) {
       findOptions.take = per_page;
@@ -66,14 +79,16 @@ export class UsersService {
       establecimiento: { institucion: true },
     };
     findOptions.select = {
+      id: true,
       primerNombre: true,
       primerApellido: true,
       n_documento: true,
       active: true,
+      createAt: true,
+      updateAt: true,
       rol: { id: true, name: true },
       establecimiento: { nombre: true, institucion: { nombre: true } },
     };
-    findOptions.where = where;
 
     const [users, count] = await this.usersRepository.findAndCount(findOptions);
     return {
@@ -148,7 +163,7 @@ export class UsersService {
 
   async update(id: string, updateUserDTO: updateUserDTO): Promise<MntUsers> {
     const { idRol, email, primerNombre, segundoNombre,tercerNombre, primerApellido, segundoApellido,
-      fecha_nacimiento,n_documento, establecimiento, pais, dependencia} = updateUserDTO;
+      fecha_nacimiento,n_documento, establecimiento, pais, dependencia, username} = updateUserDTO;
     const oldUser = await this.findOne(id);
 
     if (email) {
@@ -171,7 +186,7 @@ export class UsersService {
       n_documento,
       establecimiento: establecimiento ? { id: establecimiento } : null, 
       dependencia: dependencia ? { id: dependencia } : null, 
-
+      username,
       pais: pais ? { id: pais } : null,
       updateAt: moment().tz('America/El_Salvador').format(),
     });
@@ -396,4 +411,18 @@ export class UsersService {
   async getPaises() {
     return await this.paisesRepository.find();
   }
+
+  //Cambiando el estado de un usuario
+  async changeEstado(id: string, activo: boolean) {
+  const user = await this.findOne(id); //Asegurando que el usuario existe.
+
+  user.active = activo;
+  user.updateAt = moment().tz('America/El_Salvador').toDate();
+
+  return await this.usersRepository.save(user);
+}
+
+
+
+
 }

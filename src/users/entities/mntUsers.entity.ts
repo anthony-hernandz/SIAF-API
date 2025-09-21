@@ -49,7 +49,7 @@ export class MntUsers {
   @Column({ type: 'text' })
   password: string; // Encriptado
 
-  @Column({ type: 'boolean', default: true, name: 'activo' })
+  @Column({ type: 'boolean', default: false, name: 'activo' })
   active: boolean;
 
   @Column({ nullable: true, type: 'text' })
@@ -61,7 +61,7 @@ export class MntUsers {
   @Column({ type: 'varchar', nullable: true })
   n_documento: string;
 
-  @Exclude()
+  //@Exclude()
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
@@ -69,7 +69,7 @@ export class MntUsers {
   })
   createAt: Date;
 
-  @Exclude()
+  //@Exclude()
   @UpdateDateColumn({
     type: 'timestamptz',
     name: 'updated_at',

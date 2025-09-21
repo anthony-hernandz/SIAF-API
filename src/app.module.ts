@@ -11,10 +11,13 @@ import { EstablecimientosModule } from './administracion/establecimientos/establ
 import { TipoActivoModule } from './administracion/catalogs/tipo_activos/tipo_activos.module';
 import { TipofinanciamientoModule } from './administracion/catalogs/tipofinanciamiento/tipofinanciamiento.module';
 import { DependenciaModule } from './dependencia/dependencia.module';
+import { ProcedenciaModule } from './administracion/catalogs/procedencia/procedencia.module';
+import { EstadoFisicoActivoModule } from './administracion/catalogs/estado_fisico_activo/estado_fisico_activo.module';
+import { AmbientesModule } from './administracion/catalogs/ambientes/ambientes.module';
+import { CaracteristicasModule } from './administracion/catalogs/caracteristicas/caracteristicas.module';
 import { GrupoModule } from './administracion/catalogs/grupo/grupo.module';
 import { ClaseModule } from './administracion/catalogs/clase/clase.module';
 import { SubclaseModule } from './administracion/catalogs/subclase/subclase.module';
-
 
 @Module({
   imports: [
@@ -30,10 +33,13 @@ import { SubclaseModule } from './administracion/catalogs/subclase/subclase.modu
     TipoActivoModule,
     TipofinanciamientoModule,
     DependenciaModule,
+    ProcedenciaModule,
+    EstadoFisicoActivoModule,
+    AmbientesModule,
+    CaracteristicasModule,
     GrupoModule,
     ClaseModule,
     SubclaseModule,
-
   ],
   controllers: [],
   providers: [],

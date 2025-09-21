@@ -8,8 +8,12 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
+  Patch,
+  
 } from '@nestjs/common';
+import { Public } from '@auth/decorators/public.decorator';
 import { UsersService } from 'src/users/services/users.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@auth/guards/jwt.guard';
@@ -27,7 +31,8 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all users' })
   @Get()
-  async findAll(@Param() paramsUsers: paginationUsersDTO) {
+  // Uso de @Query para la busqueda de usuarios en tiempo real
+  async findAll(@Query() paramsUsers: paginationUsersDTO) {
     return await this.usersService.findAll(paramsUsers);
   }
 
@@ -63,11 +68,11 @@ export class UsersController {
   permisosById(@Param('id') id: string) {
     return this.usersService.findPermissionsById(id);
   }
-
+  
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List a user' })
   @Put('/:id')
-  async update(@Param() id: string, @Body() data: updateUserDTO) {
+  async update(@Param('id') id: string, @Body() data: updateUserDTO) {
     return await this.usersService.update(id, data);
   }
 
@@ -84,4 +89,17 @@ export class UsersController {
   async delete(@Param('id') id: string) {
     return await this.usersService.delete(id);
   }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Endpoint para Activar/Desactivar usuario' })
+  @Patch('/:id/estado')
+  async changeEstado(
+    @Param('id') id: string,
+    @Body('activo') activo: boolean,
+  ) {
+    return await this.usersService.changeEstado(id, activo);
+  }
+
+
 }
