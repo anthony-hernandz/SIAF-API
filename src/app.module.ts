@@ -15,7 +15,9 @@ import { ProcedenciaModule } from './administracion/catalogs/procedencia/procede
 import { EstadoFisicoActivoModule } from './administracion/catalogs/estado_fisico_activo/estado_fisico_activo.module';
 import { AmbientesModule } from './administracion/catalogs/ambientes/ambientes.module';
 import { CaracteristicasModule } from './administracion/catalogs/caracteristicas/caracteristicas.module';
-
+import { GrupoModule } from './administracion/catalogs/grupo/grupo.module';
+import { ClaseModule } from './administracion/catalogs/clase/clase.module';
+import { SubclaseModule } from './administracion/catalogs/subclase/subclase.module';
 
 @Module({
   imports: [
@@ -34,8 +36,10 @@ import { CaracteristicasModule } from './administracion/catalogs/caracteristicas
     ProcedenciaModule,
     EstadoFisicoActivoModule,
     AmbientesModule,
-    CaracteristicasModule
-
+    CaracteristicasModule,
+    GrupoModule,
+    ClaseModule,
+    SubclaseModule,
   ],
   controllers: [],
   providers: [],
