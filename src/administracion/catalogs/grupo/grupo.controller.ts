@@ -31,6 +31,12 @@ export class GrupoController {
     return { ok: true, recurso: 'grupo' };
   }
 
+  @Get('activos')
+  @ApiOperation({ summary: 'Listar grupos activos' })
+  listActivos() {
+    return this.service.activos();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Crear un nuevo grupo' })
   create(@Body() dto: CreateGrupoDto) {

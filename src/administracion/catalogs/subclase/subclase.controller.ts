@@ -85,6 +85,15 @@ export class SubclaseController {
     );
   }
 
+  @Get('activos')
+  @ApiOperation({ summary: 'Listar subclases activas' })
+  activos(
+    @Query('claseId') claseId?: string,
+    @Query('grupoId') grupoId?: string,
+  ) {
+    return this.service.activos(claseId, grupoId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una subclase por su ID' })
   findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
@@ -119,15 +128,6 @@ export class SubclaseController {
   @ApiOperation({ summary: 'Eliminar una subclase por su ID' })
   remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.service.remove(id);
-  }
-
-  @Get('activos')
-  @ApiOperation({ summary: 'Listar subclases activas' })
-  activos(
-    @Query('claseId') claseId?: string,
-    @Query('grupoId') grupoId?: string,
-  ) {
-    return this.service.activos(claseId, grupoId);
   }
 
 }

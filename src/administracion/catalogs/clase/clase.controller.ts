@@ -64,6 +64,12 @@ export class ClaseController {
     return this.service.search(q, page, Number(limit), grupoId);
   }
 
+  @Get('activos')
+  @ApiOperation({ summary: 'Listar clases activas' })
+  activos(@Query('grupoId') grupoId?: string) {
+    return this.service.activos(grupoId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una clase por ID' })
   findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
@@ -100,9 +106,4 @@ export class ClaseController {
     return this.service.remove(id);
   }
 
-  @Get('activos')
-  @ApiOperation({ summary: 'Listar clases activas' })
-  activos(@Query('grupoId') grupoId?: string) {
-    return this.service.activos(grupoId);
-  }
 }

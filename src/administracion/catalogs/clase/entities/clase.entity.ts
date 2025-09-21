@@ -17,7 +17,7 @@ export enum EstadoRegistro {
 }
 
 @Entity({ name: 'mnt_clase' })
-@Unique(['codigo'])
+@Unique(['codigo', 'grupo'])
 @Unique(['nombre', 'grupo'])
 export class Clase {
   @PrimaryGeneratedColumn('uuid')

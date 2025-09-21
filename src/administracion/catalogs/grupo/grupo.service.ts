@@ -17,6 +17,13 @@ export class GrupoService {
     private readonly repo: Repository<Grupo>,
   ) {}
 
+  async activos() {
+    return this.repo.find({
+      where: { estado: EstadoRegistro.ACTIVO },
+      order: { codigo: 'ASC' },
+    });
+  }
+
   async search(query?: string, page = 1, limit = 10) {
     const where =
       query && query.length >= 3
